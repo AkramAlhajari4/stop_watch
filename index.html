@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ساعة التوقف</title>
+</head>
+<body>
+    <div id="stopwatch">00 : 00 : 000</div>
+    <button id="startButton">بدء</button>
+    <button id="stopButton">إيقاف</button>
+    <button id="resetButton">إعادة تعيين</button>
+
+    <script>
+        let stopwatchInterval;
+        let seconds = 0;
+        let minutes = 0;
+        let milliseconds = 0;
+        let isRunning = false;
+
+        const stopwatchDisplay = document.getElementById("stopwatch");
+        const startButton = document.getElementById("startButton");
+        const stopButton = document.getElementById("stopButton");
+        const resetButton = document.getElementById("resetButton");
+
+        startButton.addEventListener("click", startStopwatch);
+        stopButton.addEventListener("click", stopStopwatch);
+        resetButton.addEventListener("click", resetStopwatch);
+
+        function startStopwatch() {
+            if (!isRunning) {
+                isRunning = true;
+                stopwatchInterval = setInterval(updateStopwatch, 10);
+                startButton.disabled = true;
+            }
+        }
+
+        function stopStopwatch() {
+            if (isRunning) {
+                isRunning = false;
+                clearInterval(stopwatchInterval);
+                startButton.disabled = false;
+            }
+        }
+
+        function resetStopwatch() {
+            stopStopwatch();
+            seconds = 0;
+            minutes = 0;
+            milliseconds = 0;
+            updateDisplay();
+        }
+
+        function updateStopwatch() {
+            milliseconds += 10;
+            if (milliseconds === 1000) {
+                milliseconds = 0;
+                seconds++;
+                if (seconds === 60) {
+                    seconds = 0;
+                    minutes++;
+                }
+            }
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            const formattedTime = padNumber(minutes) + " : " + padNumber(seconds) + " : " + padNumber(milliseconds);
+            stopwatchDisplay.innerText = formattedTime;
+        }
+
+        function padNumber(number) {
+            return number.toString().padStart(2, '0');
+        }
+    </script>
+</body>
+</html>
